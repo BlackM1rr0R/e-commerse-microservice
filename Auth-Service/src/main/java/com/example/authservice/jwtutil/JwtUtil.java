@@ -8,6 +8,7 @@ import io.jsonwebtoken.security.Keys;
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.List;
 
 @Component
 public class JwtUtil {
@@ -23,6 +24,7 @@ public class JwtUtil {
     public String generateToken(String email) {
         return Jwts.builder()
                 .setSubject(email)
+                .claim("roles", List.of("USER"))
                 .setIssuedAt(new Date())
                 .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
                 .signWith(key, SignatureAlgorithm.HS256)
