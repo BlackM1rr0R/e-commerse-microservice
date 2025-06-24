@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: subcategory-service
+  datasource:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://localhost:3306/subcategorysdb
+      username: root
+      password: Baku2018
+  jpa:
+    database-platform: org.hibernate.dialect.MySQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+eureka:
+  client:
+  service-url:
+    defaultZone: http://localhost:8761/eureka
+server:
+  port: 8087

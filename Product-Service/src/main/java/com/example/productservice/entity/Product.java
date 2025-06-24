@@ -19,6 +19,24 @@ public class Product {
     private String name;
     private String description;
     private Double price;
+    private Long categoryId;
+    private Long subCategoryId;
+    private String userEmail;
+    public Long getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(Long categoryId) {
+        this.categoryId = categoryId;
+    }
+
+    public Long getSubCategoryId() {
+        return subCategoryId;
+    }
+
+    public void setSubCategoryId(Long subCategoryId) {
+        this.subCategoryId = subCategoryId;
+    }
 
     public String getUserEmail() {
         return userEmail;
@@ -28,7 +46,7 @@ public class Product {
         this.userEmail = userEmail;
     }
 
-    private String userEmail;
+
     public Long getId() {
         return id;
     }

@@ -16,3 +16,8 @@ server:
 jwt:
   secret: a-string-secret-at-least-256-bits-long
   expiration: 3600000
+
+eureka:
+  client:
+  service-url:
+    defaultZone: http://localhost:8761/eureka

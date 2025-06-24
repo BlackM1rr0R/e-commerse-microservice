@@ -31,4 +31,18 @@ public class ProductController {
         String userEmail=jwtService.extractUsername(token);
         return productService.getMyProducts(userEmail);
     }
+    @GetMapping("/{id}")
+    public Product getProductId(@PathVariable Long id, HttpServletRequest request) {
+        String token = request.getHeader("Authorization").substring(7);
+        String userEmail = jwtService.extractUsername(token);
+        Product product = productService.getProductId(id);
+        if (!product.getUserEmail().equals(userEmail)) {
+            throw new RuntimeException("You are not authorized to view this product.");
+        }
+        return product;
+    }
+    @GetMapping("/all-products")
+    public List<Product> getAllProducts() {
+        return productService.getAllProducts();
+    }
 }
