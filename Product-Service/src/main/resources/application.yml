@@ -1,6 +1,9 @@
 spring:
   application:
     name: Product-Service
+  web:
+    resources:
+      static-locations: classpath:/static/
   datasource:
     url: jdbc:mysql://localhost:3306/productecommersedb
     username: root

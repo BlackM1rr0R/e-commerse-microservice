@@ -4,8 +4,11 @@ import com.example.productservice.entity.Product;
 import com.example.productservice.jwtservice.JwtService;
 import com.example.productservice.service.ProductService;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -18,13 +21,23 @@ public class ProductController {
         this.productService = productService;
         this.jwtService = jwtService;
     }
-    @PostMapping("/add")
-    public Product addProduct(@RequestBody Product product, HttpServletRequest request) {
-        String token=request.getHeader("Authorization").substring(7);
-        String userEmail=jwtService.extractUsername(token);
-        product.setUserEmail(userEmail);
-        return productService.addProduct(product);
+    @PostMapping(value = "/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public Product addProduct(
+            @RequestParam("name") String name,
+            @RequestParam("price") Double price,
+            @RequestParam("description") String description,
+            @RequestParam("categoryId") Long categoryId,
+            @RequestParam("subCategoryId") Long subCategoryId,
+            @RequestParam("image") MultipartFile image,
+            HttpServletRequest request
+    ) throws IOException {
+
+        String token = request.getHeader("Authorization").substring(7);
+        String userEmail = jwtService.extractUsername(token);
+
+        return productService.addProductWithImage(name, price, description, categoryId, subCategoryId, image, userEmail);
     }
+
     @GetMapping("/my-products")
     public List<Product> getMyProducts(HttpServletRequest request) {
         String token=request.getHeader("Authorization").substring(7);
