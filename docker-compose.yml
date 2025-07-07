@@ -1,23 +1,126 @@
-version: '3.8'
-services:
-  auth-service:
-    build:
-      context: ./Auth-Service
-    ports:
-      - "8081:8081"
-    networks:
-      - microservice-network
-
-  product-service:
-    build:
-      context: ./product-service
-    ports:
-      - "8082:8082"
-    depends_on:
-      - auth-service
-    networks:
-      - microservice-network
-
-networks:
-  microservice-network:
-    driver: bridge
+#version: "3.9"
+#
+#services:
+#  mysql:
+#    image: mysql:8
+#    container_name: mysql
+#    restart: always
+#    environment:
+#      MYSQL_ROOT_PASSWORD: Baku2018
+#    ports:
+#      - "3306:3306"
+#    volumes:
+#      - mysql_data:/var/lib/mysql
+#      - ./mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
+#    networks:
+#      - spring-net
+#    healthcheck:
+#      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-pBaku2018"]
+#      interval: 10s
+#      timeout: 5s
+#      retries: 10
+#
+#  eureka-server:
+#    image: eureka-server:latest
+#    container_name: eureka-server
+#    build:
+#      context: ./eureka-server
+#    ports:
+#      - "8761:8761"
+#    depends_on:
+#      mysql:
+#        condition: service_healthy
+#    networks:
+#      - spring-net
+#    healthcheck:
+#      test: ["CMD", "curl", "-f", "http://localhost:8761"]
+#      interval: 10s
+#      timeout: 5s
+#      retries: 5
+#
+#  auth-service:
+#    image: auth-service:latest
+#    container_name: auth-service
+#    build:
+#      context: ./auth-service
+#    ports:
+#      - "8083:8083"
+#    environment:
+#      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/userecommersedb
+#      - SPRING_DATASOURCE_USERNAME=root
+#      - SPRING_DATASOURCE_PASSWORD=Baku2018
+#      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
+#    depends_on:
+#      mysql:
+#        condition: service_healthy
+#      eureka-server:
+#        condition: service_healthy
+#    networks:
+#      - spring-net
+#
+#  product-service:
+#    image: product-service:latest
+#    container_name: product-service
+#    build:
+#      context: ./product-service
+#    ports:
+#      - "8084:8084"
+#    environment:
+#      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/productecommersedb
+#      - SPRING_DATASOURCE_USERNAME=root
+#      - SPRING_DATASOURCE_PASSWORD=Baku2018
+#      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
+#    depends_on:
+#      mysql:
+#        condition: service_healthy
+#      eureka-server:
+#        condition: service_healthy
+#    networks:
+#      - spring-net
+#
+#  category-service:
+#    image: category-service:latest
+#    container_name: category-service
+#    build:
+#      context: ./category-service
+#    ports:
+#      - "8086:8086"
+#    environment:
+#      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/categorysdb
+#      - SPRING_DATASOURCE_USERNAME=root
+#      - SPRING_DATASOURCE_PASSWORD=Baku2018
+#      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
+#    depends_on:
+#      mysql:
+#        condition: service_healthy
+#      eureka-server:
+#        condition: service_healthy
+#    networks:
+#      - spring-net
+#
+#  subcategory-service:
+#    image: subcategory-service:latest
+#    container_name: subcategory-service
+#    build:
+#      context: ./subcategory-service
+#    ports:
+#      - "8087:8087"
+#    environment:
+#      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/subcategorysdb
+#      - SPRING_DATASOURCE_USERNAME=root
+#      - SPRING_DATASOURCE_PASSWORD=Baku2018
+#      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
+#    depends_on:
+#      mysql:
+#        condition: service_healthy
+#      eureka-server:
+#        condition: service_healthy
+#    networks:
+#      - spring-net
+#
+#volumes:
+#  mysql_data:
+#
+#networks:
+#  spring-net:
+#    driver: bridge

@@ -1,7 +1,9 @@
 package com.example.productservice.controller;
 
+import com.example.productservice.documents.ProductDocument;
 import com.example.productservice.entity.Product;
 import com.example.productservice.jwtservice.JwtService;
+import com.example.productservice.repository.ProductElasticRepository;
 import com.example.productservice.service.ProductService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.MediaType;
@@ -16,10 +18,11 @@ import java.util.List;
 public class ProductController {
     private final ProductService productService;
     private final JwtService jwtService;
-
-    public ProductController(ProductService productService, JwtService jwtService) {
+    private final ProductElasticRepository productElasticRepository;
+    public ProductController(ProductService productService, JwtService jwtService,ProductElasticRepository productElasticRepository) {
         this.productService = productService;
         this.jwtService = jwtService;
+        this.productElasticRepository = productElasticRepository;
     }
     @PostMapping(value = "/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public Product addProduct(
@@ -57,5 +60,10 @@ public class ProductController {
     @GetMapping("/all-products")
     public List<Product> getAllProducts() {
         return productService.getAllProducts();
+    }
+
+    @GetMapping("/search")
+    public List<ProductDocument> searchProduct(@RequestParam("keyword") String keyword){
+        return productElasticRepository.findByNameContainingIgnoreCase(keyword);
     }
 }

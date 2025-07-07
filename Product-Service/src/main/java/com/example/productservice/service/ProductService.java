@@ -1,11 +1,14 @@
 package com.example.productservice.service;
 
+import com.example.productservice.documents.ProductDocument;
 import com.example.productservice.dto.CategoryResponse;
 import com.example.productservice.dto.SubCategoryResponse;
 import com.example.productservice.entity.Product;
 import com.example.productservice.feigen.CategoryClient;
 import com.example.productservice.feigen.SubcategoryClient;
+
 import com.example.productservice.repository.ProductRepository;
+import com.example.productservice.repository.ProductElasticRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,14 +21,22 @@ import java.util.UUID;
 
 @Service
 public class ProductService {
+
     private final ProductRepository productRepository;
+    private final ProductElasticRepository productElasticRepository;
     private final CategoryClient categoryClient;
     private final SubcategoryClient subcategoryClient;
-    public ProductService(ProductRepository productRepository, CategoryClient categoryClient, SubcategoryClient subcategoryClient) {
+
+    public ProductService(ProductRepository productRepository,
+                          ProductElasticRepository productElasticRepository,
+                          CategoryClient categoryClient,
+                          SubcategoryClient subcategoryClient) {
         this.productRepository = productRepository;
+        this.productElasticRepository = productElasticRepository;
         this.categoryClient = categoryClient;
         this.subcategoryClient = subcategoryClient;
     }
+
     public Product addProduct(Product product) {
         CategoryResponse category = categoryClient.getCategoryById(product.getCategoryId());
         SubCategoryResponse subCategory = subcategoryClient.getSubCategoryById(product.getSubCategoryId());
@@ -37,14 +48,12 @@ public class ProductService {
         return productRepository.save(product);
     }
 
-
     public List<Product> getMyProducts(String userEmail) {
         return productRepository.findByUserEmail(userEmail);
     }
 
-
     public Product getProductId(Long id) {
-        return productRepository.findById(id).get();
+        return productRepository.findById(id).orElseThrow(() -> new RuntimeException("Ürün bulunamadı"));
     }
 
     public List<Product> getAllProducts() {
@@ -80,7 +89,21 @@ public class ProductService {
         product.setUserEmail(userEmail);
         product.setImageUrl("/uploads/" + fileName);
 
-        return productRepository.save(product);
-    }
+        // MySQL'e kaydet
+        Product savedProduct = productRepository.save(product);
 
+        ProductDocument document = new ProductDocument();
+        document.setId(savedProduct.getId().toString());
+        document.setName(savedProduct.getName());
+        document.setDescription(savedProduct.getDescription());
+        document.setPrice(savedProduct.getPrice());
+        document.setUserEmail(savedProduct.getUserEmail());
+        document.setCategoryId(savedProduct.getCategoryId());
+        document.setSubCategoryId(savedProduct.getSubCategoryId());
+        document.setImageUrl(savedProduct.getImageUrl());
+
+        productElasticRepository.save(document);
+
+        return savedProduct;
+    }
 }

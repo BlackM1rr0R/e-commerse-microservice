@@ -48,6 +48,7 @@ public class SecurityConfig  {
                                 authorizeRequests
                                         .requestMatchers("/auth/**").permitAll()
                                         .requestMatchers("/test/hello").hasAnyRole("USER", "ADMIN")
+                                        .requestMatchers("/auth/about/me").hasAnyRole("USER", "ADMIN")
                                         .anyRequest().authenticated()
 
                         );

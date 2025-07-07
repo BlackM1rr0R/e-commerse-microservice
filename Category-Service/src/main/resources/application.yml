@@ -1,19 +1,23 @@
 spring:
   application:
-    name: category-service
+    name: CATEGORY-SERVICE
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/categorysdb
-    username: root
-    password: Baku2018
+   url: jdbc:mysql://localhost:3306/categorysdb
+   username: root
+   password: Baku2018
+   driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     database-platform: org.hibernate.dialect.MySQLDialect
     hibernate:
-     ddl-auto: update
+      ddl-auto: update
     show-sql: true
-eureka:
-  client:
-  service-url:
-    defaultZone: http://localhost:8761/eureka
+
 server:
   port: 8086
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+    register-with-eureka: true
+    fetch-registry: true

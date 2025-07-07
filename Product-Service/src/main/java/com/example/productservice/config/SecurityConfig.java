@@ -27,6 +27,7 @@ public class SecurityConfig {
                         .requestMatchers("/product/my-products").hasAnyAuthority("USER","ADMIN")
                         .requestMatchers("/product/{id}").hasAnyAuthority("USER","ADMIN")
                         .requestMatchers("/product/all-products").hasAnyAuthority("ADMIN")
+                        .requestMatchers("/product/search").hasAnyAuthority("ADMIN","USER")
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
